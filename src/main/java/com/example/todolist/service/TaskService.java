@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TaskService {
+
     private final TaskRepository taskRepository;
 
     public Task create(TaskDTO dto) {
