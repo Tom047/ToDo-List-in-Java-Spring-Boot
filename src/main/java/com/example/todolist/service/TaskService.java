@@ -3,6 +3,7 @@ package com.example.todolist.service;
 import com.example.todolist.dto.TaskDTO;
 import com.example.todolist.entity.Task;
 import com.example.todolist.repository.TaskRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,10 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-//    public List<Task> readById(Long id) {
-//        return taskRepository.findById(id);
-//    }
+    public Task readById(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + id));
+    }
 
     public Task update(Task product) {
         return taskRepository.save(product);
