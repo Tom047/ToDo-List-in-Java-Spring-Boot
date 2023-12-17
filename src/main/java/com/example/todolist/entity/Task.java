@@ -28,7 +28,9 @@ public class Task {
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
     }
 
     @PreUpdate
