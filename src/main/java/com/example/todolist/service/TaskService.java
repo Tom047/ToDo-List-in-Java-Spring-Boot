@@ -34,8 +34,8 @@ public class TaskService {
                 .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + id));
     }
 
-    public Task update(Task product) {
-        return taskRepository.save(product);
+    public Task update(Task task) {
+        return taskRepository.save(task);
     }
 
     public void delete(Long id) {
