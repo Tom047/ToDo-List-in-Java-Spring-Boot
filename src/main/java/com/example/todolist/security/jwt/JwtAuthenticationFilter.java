@@ -47,6 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.debug("Token life time expired");
         } catch (SignatureException e) {
             log.debug("Invalid signature");
+        } catch (IllegalArgumentException e) {
+            log.debug("Token is empty");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
