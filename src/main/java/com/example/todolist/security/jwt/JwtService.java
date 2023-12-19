@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class JwtService {
 
-    private SecretKey jwtSecretKey;
+    private final SecretKey jwtSecretKey;
 
     @Value("${security.jwt.expiration}")
     private long jwtExpirationInMs;
@@ -42,13 +42,12 @@ public class JwtService {
                 .subject(userDetails.getUsername())
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(jwtSecretKey, Jwts.SIG.HS512)
+                .signWith(jwtSecretKey, Jwts.SIG.HS256)
                 .compact();
     }
 
     public String getUsernameFromToken(String token) {
         Claims claims = getAllClaimsFromToken(token);
-
         return claims.getSubject();
     }
 
@@ -65,7 +64,6 @@ public class JwtService {
 
     private boolean isTokenExpired(String token) {
         Claims claims = getAllClaimsFromToken(token);
-
         return claims.getExpiration().before(new Date());
     }
 
