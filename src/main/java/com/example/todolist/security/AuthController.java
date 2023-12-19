@@ -27,7 +27,7 @@ public class AuthController {
     private final AuthenticationManager authManager;
 
     @PostMapping("/register")
-    public ResponseEntity<?> createAuthToken(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         try {
             userService.create(userDTO);
         } catch (IllegalArgumentException e) {
@@ -50,11 +50,6 @@ public class AuthController {
                         authRequest.getPassword()
                 )
         );
-
-//        User user = userService.readByUsername(authRequest.getUsername());
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-//
-//        String jwt = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(authRequest);
     }
