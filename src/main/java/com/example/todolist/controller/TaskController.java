@@ -32,9 +32,9 @@ public class TaskController {
         return new ResponseEntity<>(taskService.readById(id), HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<Task> update(@RequestBody Task task) {
-        return new ResponseEntity<>(taskService.update(task), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        return new ResponseEntity<>(taskService.update(taskDTO, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
