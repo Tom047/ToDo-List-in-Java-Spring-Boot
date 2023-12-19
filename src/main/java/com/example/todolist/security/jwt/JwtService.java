@@ -17,14 +17,11 @@ import java.util.Map;
 @Component
 public class JwtService {
 
-    private final SecretKey jwtSecretKey;
+    @Value("${security.jwt.secret}")
+    private String jwtSecretKey;
 
     @Value("${security.jwt.expiration}")
     private long jwtExpirationInMs;
-
-    public JwtService(@Value("${security.jwt.secret}") String secret) {
-        this.jwtSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-    }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
@@ -42,7 +39,7 @@ public class JwtService {
                 .subject(userDetails.getUsername())
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(jwtSecretKey, Jwts.SIG.HS256)
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -53,7 +50,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
-            Jwts.parser().verifyWith(jwtSecretKey).build().parseSignedClaims(token);
+            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
             final String username = getUsernameFromToken(token);
             return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
         } catch (JwtException ex) {
@@ -69,9 +66,14 @@ public class JwtService {
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(jwtSecretKey)
+                .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
