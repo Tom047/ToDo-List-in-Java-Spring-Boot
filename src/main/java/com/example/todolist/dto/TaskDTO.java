@@ -13,4 +13,5 @@ public class TaskDTO {
     private boolean status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long userId;
 }
